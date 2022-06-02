@@ -1,17 +1,10 @@
 <template>
   <div>
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      :rules="rules"
-      label-width="120px"
-      class="login-box"
-      :size="formSize"
-    >
+    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="login-box" :size="formSize">
       <h3>欢迎登录</h3>
       <el-row>
-        <el-form-item label="账号" class="login-item" prop="name">
-          <el-input v-model="ruleForm.name" />
+        <el-form-item label="账号" class="login-item" prop="username">
+          <el-input v-model="ruleForm.username" />
         </el-form-item>
       </el-row>
       <el-row>
@@ -49,22 +42,22 @@ const router = useRouter();
 const ruleFormRef = ref<FormInstance>()
 
 const ruleForm = reactive({
-  name: "",
+  username: "",
   password: "",
   type: "",
 });
 
 const rules = reactive({
-  name: [
+  username: [
     {
       required: true,
       message: "账号不能为空",
       trigger: "blur",
     },
     {
-      min: 6,
+      min: 1,
       max: 12,
-      message: '用户名长度应处于6~12个字符',
+      message: '用户名长度应处于1~12个字符',
       trigger: 'blur'
     },
   ],
@@ -86,6 +79,12 @@ const rules = reactive({
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
+  if (ruleForm.type === '用户') {
+    ruleForm.type = 'user'
+  }
+  else {
+    ruleForm.type = 'admin'
+  }
   await formEl.validate((valid, fields) => {
     if (valid) {
       axios({
@@ -93,18 +92,29 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         url: '/login',
         data: ruleForm,
       }).then(resp => {
-        alert(JSON.stringify(resp))
+        if (resp.data['code']) {// == 308
+          ElMessage({
+            showClose: true,
+            message: '登陆成功!',
+            type: 'success',
+          })
+          localStorage.setItem('type', ruleForm.type);
+          router.push("/navigation-1");
+        }
+        else {
+          ElMessage({
+            showClose: true,
+            message: '登陆失败: ' + resp.data['message'],
+            type: 'error',
+          })
+        }
+        console.log(("登录: " + JSON.stringify(resp.data)))
       })
+    }
+    else {
       ElMessage({
         showClose: true,
-        message: '登陆成功!',
-        type: 'success',
-      })
-      router.push("/navigation-1");
-    } else {
-      ElMessage({
-        showClose: true,
-        message: '登陆失败，请填写正确的信息',
+        message: '请填写正确的信息',
         type: 'warning',
       })
     }
@@ -130,15 +140,19 @@ const gotoSign = () => {
   border-radius: 10px;
   box-shadow: 0 0 30px #dcdfe6;
 }
+
 .login-radio {
   margin-left: 0px;
 }
+
 .login-item {
   float: left;
 }
+
 .el-row {
   margin-bottom: 8px;
 }
+
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;

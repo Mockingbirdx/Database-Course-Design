@@ -33,15 +33,15 @@
   <el-divider />
 
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="username" label="账号" width="180" />
-    <el-table-column prop="type" label="类型" width="180" />
+    <el-table-column prop="id" label="ID" width="100" />
+    <el-table-column prop="username" label="用户名" width="120" />
+    <el-table-column prop="type" label="类型" width="120" />
+    <el-table-column prop="password" label="密码" width="120" />
+
+
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button
-          type="danger"
-          size="small"
-          @click="handleDelete(scope.$index); dialogVisible = true"
-        >删除</el-button>
+        <el-button type="danger" size="small" @click="handleDelete(scope.$index); dialogVisible = true">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -63,6 +63,7 @@
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
+import axios from 'axios'
 
 const ruleFormRef = ref<FormInstance>()
 
@@ -72,79 +73,71 @@ const form = reactive({
   type: '',
 })
 
-const rules = reactive({
-  username: [
-    {
-      required: true,
-      message: '用户名不能为空',
-      trigger: 'blur'
-    },
-    {
-      min: 6,
-      max: 12,
-      message: '用户名长度应处于6~12个字符',
-      trigger: 'blur'
-    },
-  ],
-  password: [
-    {
-      required: true,
-      message: '密码不能为空',
-      trigger: 'blur',
-    },
-    {
-      min: 6,
-      max: 12,
-      message: '密码长度应处于6~12个字符',
-      trigger: 'blur'
-    },
-  ],
-  type: [
-    {
-      required: true,
-      message: '账户类型不能为空',
-      trigger: 'blur',
-    },
-
-  ],
-})
+let tableData = ref(reactive([
+  {
+    id: '...',
+    username: '...',
+    password: '...',
+    type: '...',
+  }
+]))
 
 
-let tableData = ref([
-  {
-    username: 'Tom1',
-    type: '管理员',
-  },
-  {
-    username: 'Tom2',
-    type: '管理员',
-  },
-  {
-    username: 'Tom3',
-    type: '管理员',
-  },
-  {
-    username: 'Tom4',
-    type: '管理员',
-  },
-])
+// 获取用户数据
+const updateData = () => {
+  axios({ method: 'GET', url: '/users', })
+    .then(resp => {
+      if (resp.data) {
+        tableData.value = resp.data['data']
+      }
+      else {
+        ElMessage({
+          showClose: true,
+          message: '拉取失败: ' + resp.data['message'],
+          type: 'error',
+        })
+      }
+    });
+}
+
+updateData();
 
 
 const handleCreate = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
+      if (form.type == '用户') {
+        form.type = 'user'
+      }
+      else {
+        form.type = 'admin'
+      }
       let post_data = {
         username: form.username,
+        password: form.password,
         type: form.type
       }
-      ElMessage({
-        message: `账号创建成功! ${post_data}`,
-        type: 'success',
-      })
+      axios({ method: 'POST', url: '/users', data: post_data })
+        .then(resp => {
+          if (resp.data.code == 308) {
+            updateData();
+            ElMessage({
+              showClose: true,
+              message: '账号创建成功!',
+              type: 'success',
+            })
+          }
+          else {
+            ElMessage({
+              message: `账号创建失败`,
+              type: 'warning',
+            })
+          }
+        });
     } else {
       ElMessage({
-        message: `无法创建账号：请填写正确的信息`,
+        message: `请填写正确的信息`,
         type: 'warning',
       })
       return false
@@ -160,22 +153,66 @@ const handleDelete = (index: number) => {
 }
 
 const submitDelete = () => {
-  dialogVisible.value = false
-  tableData.value.splice(currentIndex.value, 1)
-  if (currentIndex.value == tableData.value.length) {
-    currentIndex.value -= 1
-  }
-
-  let post_data = {
-    username: tableData.value[currentIndex.value].username,
-    type: tableData.value[currentIndex.value].type
-  }
-
-  ElMessage({
-    message: `账号删除成功:  ${JSON.stringify(post_data)}`,
-    type: 'success',
-  })
+  dialogVisible.value = false;
+  axios({ method: 'DELETE', url: '/users/' + tableData.value[currentIndex.value].id })
+    .then(resp => {
+      if (resp.data.code == 308) {
+        updateData();
+        ElMessage({
+          showClose: true,
+          message: '删除成功',
+          type: 'success',
+        })
+        tableData.value.splice(currentIndex.value, 1)
+        if (currentIndex.value == tableData.value.length) {
+          currentIndex.value -= 1
+        }
+      }
+      else {
+        ElMessage({
+          message: '删除失败: ' + resp.data['message'],
+          type: 'warning',
+        })
+      }
+    });
 }
+
+const rules = reactive({
+  username: [
+    {
+      required: true,
+      message: '用户名不能为空',
+      trigger: 'blur'
+    },
+    {
+      min: 1,
+      max: 12,
+      message: '用户名长度应处于1~12个字符',
+      trigger: 'blur'
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '密码不能为空',
+      trigger: 'blur',
+    },
+    {
+      min: 1,
+      max: 12,
+      message: '密码长度应处于1~12个字符',
+      trigger: 'blur'
+    },
+  ],
+  type: [
+    {
+      required: true,
+      message: '账户类型不能为空',
+      trigger: 'blur',
+    },
+
+  ],
+})
 </script>
 
 <style scoped>

@@ -24,11 +24,7 @@
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-scrollbar>
           <el-menu router>
-            <el-submenu
-              v-for="(item, index) in $router.options.routes.slice(2)"
-              :key="index"
-              :index="index"
-            >
+            <el-submenu v-for="(item, index) in $router.options.routes.slice(1)" :key="index" :index="index">
               <el-sub-menu :index="index">
                 <template #title>
                   <el-icon>
@@ -37,12 +33,8 @@
                   {{ item.name }}
                 </template>
 
-                <el-menu-item
-                  v-for="(item2, index2) in item.children"
-                  :key="index2"
-                  :index="item2.path"
-                  :class="$route.path == item2.path ? 'is-active' : ''"
-                >{{ item2.name }}</el-menu-item>
+                <el-menu-item v-for="(item2, index2) in item.children" :key="index2" :index="item2.path"
+                  :class="$route.path == item2.path ? 'is-active' : ''">{{ item2.name }}</el-menu-item>
               </el-sub-menu>
             </el-submenu>
           </el-menu>
@@ -59,20 +51,32 @@
 import { Menu as IconMenu, Setting } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus"
+import axios from 'axios'
 
 const router = useRouter();
 
 function handleLogout() {
-  let post_data = {
-
-  }
-
-  ElMessage({
-    showClose: true,
-    message: '已退出当前账号',
-    type: 'success',
+  axios({
+    method: 'GET',
+    url: '/logout',
+  }).then(resp => {
+    if (resp.data['code'] == 308) {
+      ElMessage({
+        showClose: true,
+        message: '已退出当前账号',
+        type: 'success',
+      })
+      localStorage.setItem('type', 'none');
+    }
+    else {
+      ElMessage({
+        showClose: true,
+        message: '注销失败: ' + resp.data['message'],
+        type: 'error',
+      })
+    }
+    console.log(("注销: " + JSON.stringify(resp.data)))
   })
-
   router.replace('/')
 }
 </script>
@@ -84,6 +88,7 @@ function handleLogout() {
   background-color: #b3c0d1;
   color: var(--el-text-color-primary);
 }
+
 .layout-container-demo .el-aside {
   width: 200px;
   color: var(--el-text-color-primary);
@@ -91,12 +96,15 @@ function handleLogout() {
   border-right: solid 1px #e6e6e6;
   box-sizing: border-box;
 }
+
 .layout-container-demo .el-menu {
   border-right: none;
 }
+
 .layout-container-demo .el-main {
   padding: 0;
 }
+
 .layout-container-demo .toolbar {
   position: absolute;
   display: inline-flex;

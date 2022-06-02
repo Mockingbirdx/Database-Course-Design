@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+import { ElMessage } from "element-plus"
+
 import login from '../views/login.vue'
 import sign from '../views/sign.vue'
 import index from '../views/index.vue'
@@ -20,11 +22,7 @@ const routes = [
     path: '/',
     name: '登录页',
     component: login,
-  },
-  {
-    path: '/sign',
-    name: '注册页',
-    component: sign,
+    meta: { isAuth: false }
   },
   {
     path: '/navigation-1',
@@ -35,7 +33,8 @@ const routes = [
       {
         path: '/Database',
         name: '数据库配置信息',
-        component: pageDatabase
+        component: pageDatabase,
+        meta: { isAuth: true }
       },
     ]
   },
@@ -48,7 +47,8 @@ const routes = [
       {
         path: '/User',
         name: '用户注册信息',
-        component: pageUser
+        component: pageUser,
+        meta: { isAuth: true }
       },
     ]
   },
@@ -61,12 +61,14 @@ const routes = [
       {
         path: '/Upload',
         name: '数据导入',
-        component: pageUpload
+        component: pageUpload,
+        meta: { isAuth: true }
       },
       {
         path: '/Download',
         name: '数据导出',
-        component: pageDownload
+        component: pageDownload,
+        meta: { isAuth: true }
       }
     ]
   },
@@ -79,22 +81,26 @@ const routes = [
       {
         path: '/Sector',
         name: '小区配置信息查询',
-        component: pageSector
+        component: pageSector,
+        meta: { isAuth: true }
       },
       {
         path: '/eNodeB',
         name: '基站eNodeB信息查询',
-        component: page_eNodeB
+        component: page_eNodeB,
+        meta: { isAuth: true }
       },
       {
         path: '/KPI',
         name: '小区KPI指标信息查询',
-        component: pageKPI
+        component: pageKPI,
+        meta: { isAuth: true }
       },
       {
         path: '/PRB',
         name: 'PRB信息统计与查询',
-        component: pagePRB
+        component: pagePRB,
+        meta: { isAuth: true }
       }
     ]
   },
@@ -107,12 +113,14 @@ const routes = [
       {
         path: '/C2I',
         name: '主邻小区C2I干扰分析',
-        component: pageC2I
+        component: pageC2I,
+        meta: { isAuth: true }
       },
       {
         path: '/C2Inew',
         name: '重叠覆盖干扰小区三元组分析',
-        component: pageC2Inew
+        component: pageC2Inew,
+        meta: { isAuth: true }
       }
     ]
   }
@@ -121,6 +129,32 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+let loginPage = '/'
+router.beforeEach((to, from, next) => {
+  console.log(localStorage.type + '  ' + to.path)
+
+  // 校验进入页面是否需要权限
+  if (to.meta.isAuth) {
+    var type = localStorage.getItem('type')
+    // 登录状态过期自动跳转到登录页
+    if (type === 'none' || type === null) {
+      ElMessage({
+        type: 'error',
+        message: '登录状态已失效，请重新登录',
+        showClose: true
+      })
+      router.replace(loginPage)
+    }
+    else if (type === 'user') {
+
+    }
+    else if (type === 'admin') {
+
+    }
+  }
+  next()
 })
 
 export default router
