@@ -69,11 +69,6 @@ const handleDownloadTxt = (index: number) => {
 const submitDownload = () => {
   dialogVisible.value = false
 
-  let post_data = {
-    table: tableData.value[currentIndex.value].name,
-    type: currentType.value
-  }
-
   var url = '/tables/';
   if (currentType.value == "txt") {
     url += 'txt/'
@@ -81,14 +76,17 @@ const submitDownload = () => {
   else {
     url += 'excel/'
   }
+  url += tableData.value[currentIndex.value].name
 
-
-  // 待完善接口
-
-  ElMessage({
-    message: JSON.stringify(post_data),
-    type: 'success',
-  })
+  axios({ method: 'GET', url: url })
+    .then(resp => {
+      if (resp.data.code != 308) {
+        ElMessage({
+          message: "下载失败: " + resp.data.msg,
+          type: 'warning',
+        })
+      }
+    });
 }
 </script>
 

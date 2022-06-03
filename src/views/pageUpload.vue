@@ -10,7 +10,8 @@
 
         <el-col :span="16">
           <el-select v-model="file_name.name" class="m-1" placeholder="文件名">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"
+              v-model="file_name.name" />
           </el-select>
         </el-col>
       </el-row>
@@ -21,7 +22,7 @@
           <span>上传文件</span>
         </div>
       </template>
-      <el-upload ref="upload" action="/tbcell/upload" :limit="1" :on-exceed="handleExceed" :auto-upload="false"
+      <el-upload ref="upload" action="/upload" :limit="1" :on-exceed="handleExceed" :auto-upload="false"
         :data="file_name">
         <template #trigger>
           <el-button type="primary" class="button" plain>选择本地文件</el-button>
