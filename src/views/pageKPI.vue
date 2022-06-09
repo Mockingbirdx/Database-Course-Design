@@ -55,9 +55,9 @@
                 <el-option label="enbInSwitchOutTry" value="enbInSwitchOutTry" />
             </el-select>
             </el-form-item>
-            
-            <el-form-item label="Activity time" required>
-            <el-col :span="11">
+            </el-row>
+            <el-row>
+            <el-form-item label="begin time" required>
                 <el-form-item prop="begintime">
                 <el-date-picker
                     v-model="formInline.begintime"
@@ -67,12 +67,9 @@
                     style="width: 100%"
                 />
                 </el-form-item>
-            </el-col>
-            <el-col class="text-center" :span="2">
-                <span class="text-gray-500">-</span>
-            </el-col>
-            <el-col :span="11">
-                <el-form-item prop="endtime">
+            </el-form-item>
+            <el-form-item label="end time" required>
+                <el-form-item prop="endtime" >
                 <el-date-picker
                     v-model="formInline.endtime"
                     type="date"
@@ -81,7 +78,6 @@
                     style="width: 100%"
                 />
                 </el-form-item>
-            </el-col>
             </el-form-item>
 
             <el-form-item>
@@ -92,10 +88,50 @@
         <el-divider />
       </el-header>
       <el-main>          
-        <el-scrollbar>      
+        <el-scrollbar>
+            <!--可以用于测试
+            <el-table :data="tableData" style="width: 100%">
+                <el-table-column prop="startTime" label="startTime" width="120" />
+                <el-table-column prop="rrcComplete" label="rrcComplete" width="120" />
+                <el-table-column prop="rrcRequest" label="rrcRequest" width="120" />
+                <el-table-column prop="rrcSuccessPer" label="rrcSuccessPer" width="120" />
+                <el-table-column prop="erabSuccess" label="erabSuccess" width="120" />
+                <el-table-column prop="erabTry" label="erabTry" width="120" />
+                <el-table-column prop="erabSuccessPer" label="erabSuccessPer" width="120" />
+                <el-table-column prop="enodebTringErabException" label="enodebTringErabException" width="120" />
+                <el-table-column prop="sectorSwitchOutErabException" label="sectorSwitchOutErabException" width="120" />
+                <el-table-column prop="erabOfflinePer" label="erabOfflinePer" width="120" />
+                <el-table-column prop="wirelessOnlinePer" label="wirelessOnlinePer" width="120" />
+                <el-table-column prop="enodebS1ResetUeContextRelease" label="enodebS1ResetUeContextRelease" width="120" />
+                <el-table-column prop="ueContextException" label="ueContextException" width="120" />
+                <el-table-column prop="ueContextSuccess" label="ueContextSuccess" width="120" />
+                <el-table-column prop="wirelessOfflinePer" label="wirelessOfflinePer" width="120" />
+                <el-table-column prop="enodebInDiffFreqSwitchOutSuccess" label="enodebInDiffFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="enodebInDiffFreqSwitchOutTry" label="enodebInDiffFreqSwitchOutTry" width="120" />
+                <el-table-column prop="enodebInSameFreqSwitchOutSuccess" label="enodebInSameFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="enodebInSameFreqSwitchOutTry" label="enodebInSameFreqSwitchOutTry" width="120" />
+                <el-table-column prop="enodebBetweenDiffFreqSwitchOutSuccess" label="enodebBetweenDiffFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="enodebBetweenDiffFreqSwitchOutTry" label="enodebBetweenDiffFreqSwitchOutTry" width="120" />
+                <el-table-column prop="enodebBetweenSameFreqSwitchOutSuccess" label="enodebBetweenSameFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="enodebBetweenSameFreqSwitchOutTry" label="enodebBetweenSameFreqSwitchOutTry" width="120" />
+                <el-table-column prop="enbInSwitchSuccessPer" label="enbInSwitchSuccessPer" width="120" />
+                <el-table-column prop="enbBetweenSwitchSuccessPer" label="enbBetweenSwitchSuccessPer" width="120" />
+                <el-table-column prop="sameFreqSwitchSuccessPer" label="sameFreqSwitchSuccessPer" width="120" />
+                <el-table-column prop="diffFreqSwitchSuccessPer" label="diffFreqSwitchSuccessPer" width="120" />
+                <el-table-column prop="switchSuccessPer" label="switchSuccessPer" width="120" />
+                <el-table-column prop="sectorPdcpLayerRecvUploadThroughputBit" label="sectorPdcpLayerRecvUploadThroughputBit" width="120" />
+                <el-table-column prop="sectorPdcpLayerSendDnloadThroughputBit" label="sectorPdcpLayerSendDnloadThroughputBit" width="120" />
+                <el-table-column prop="rrcReconnect" label="rrcReconnect" width="120" />
+                <el-table-column prop="rrcReconnectPer" label="rrcReconnectPer" width="120" />
+                <el-table-column prop="throughRebuildBackEnodebBeteeenSameFreqSwitchOutSuccess" label="throughRebuildBackEnodebBeteeenSameFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="throughRebuildBackEnodebBeteeenDiffFreqSwitchOutSuccess" label="throughRebuildBackEnodebBeteeenDiffFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="throughRebuildBackEnodebInSameFreqSwitchOutSuccess" label="throughRebuildBackEnodebInSameFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="throughRebuildBackEnodebInDiffFreqSwitchOutSuccess" label="throughRebuildBackEnodebInDiffFreqSwitchOutSuccess" width="120" />
+                <el-table-column prop="enbInSwitchOutSuccess" label="enbInSwitchOutSuccess" width="120" />
+                <el-table-column prop="enbInSwitchOutTry" label="enbInSwitchOutTry" width="120" />
+            </el-table>-->
             <div class="echart-container">     
-            <div id="myChart123" :style="{width: '1900px', height: '550px'}"></div>
-            <el-button type="primary" @click="handleSubmit(ruleFormRef)" plain>Query</el-button>
+            <div id="myChart123" :style="{width: '1000px', height: '550px'}"></div>
             </div>
         </el-scrollbar>
         <v-chart class="chart" :option="option" />
@@ -115,21 +151,22 @@ import axios from 'axios'
 import * as echarts from 'echarts'
 import {onMounted} from "vue";
 
- onMounted(() => { // 需要获取到element,所以是onMounted的Hook
-      
-    });
+
 
 const value = ref('')
 
-const Nameoptions =  ref(reactive([{
-  value: '',
-  label: ''
-}]))
+const Nameoptions =  ref(reactive([]))
+
 const loadOptionData = () => {  
-    axios({ method: 'GET', url: '/tbcell/enodeb-name' })
+    axios({ method: 'GET', url: '/tbcellkpi' })
     .then(resp => {
             if (resp.data) {
-                Nameoptions.value = resp.data['data']
+                for(var i=0;i<resp.data['data'].length;i++){
+                    var a = {value: '', label:''}
+                    a.value=resp.data['data'][i]['sectorName']
+                    a.label=resp.data['data'][i]['sectorName']
+                    Nameoptions.value.push(a)
+                }
             }
             else {
                 ElMessage({
@@ -219,7 +256,15 @@ Date.prototype.Format = function (fmt) {
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
-
+let extractByKey = function(arr,key,resultType='String',separator=',') {
+    let resultArr = [];
+    arr.map(item => {
+        if(item[key]) resultArr.push(item[key]);
+    })
+    if(resultType==='Array') return resultArr;
+    else if(resultType==='String')return resultArr.join(separator)
+    else throw new Error("resultType无效");
+}
 // 获取干扰分析数据，并更新表格
 const handleSubmit = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
@@ -273,31 +318,32 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
                     message: '查询到 ' + resp.data['data'].length + ' 条数据',
                     type: 'success',
                 })
-            /*if (resp.data.code == 308) {
-                
-            }
-            else {
-                ElMessage({
-                    message: "查询失败: " + resp.data.msg,
-                    type: 'warning',
-                })
-            }*/
-        });
-    let myChart = echarts.init(document.getElementById("myChart123"));
-      // 绘制图表
-      myChart.setOption({
-        xAxis: {
-          data: ["4-3", "4-4", "4-5", "4-6", "4-7", "4-8", "4-9"]
-        },
-        yAxis:{},
-        series: [
-          {
-            name: "用户量",
-            type: "line",
-            data: [8, 15, 31, 13, 15, 22, 11]
-          }
-        ]
-      });
+                var sites = []    
+                var attridata = []
+                for(var i=0;i<tableData.value.length;i++){
+                    sites.push(tableData.value[i].startTime);
+                    attridata.push(tableData.value[i][formInline.attribute])
+                }
+                let myChart = echarts.init(document.getElementById("myChart123"));
+                // 绘制图表
+                myChart.setOption({
+                    xAxis: {
+                        name:'date',
+                        data: sites
+                    },
+                    yAxis:{
+                        name: formInline.attribute
+                    },
+                    series: [
+                    {
+                        name: formInline.attribute,
+                        type: "line",
+                        data: attridata,
+                        itemStyle : { normal: {label : {show: true}}}                 
+                    }
+                    ]
+                });
+        });    
 }
 </script>
 
