@@ -29,6 +29,6 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 8088,
-    proxy: proxyObj_mock
+    proxy: proxyObj
   }
 }

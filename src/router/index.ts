@@ -22,6 +22,7 @@ const routes = [
     path: '/',
     name: '登录页',
     component: login,
+    isAuth: false,
     meta: { isAuth: false }
   },
   {
@@ -29,26 +30,29 @@ const routes = [
     name: '系统管理',
     redirect: '/Database',
     component: index,
+    isAuth: true,
     children: [
       {
         path: '/Database',
         name: '数据库配置信息',
         component: pageDatabase,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: true }
       },
     ]
   },
+
   {
     path: '/navigation-2',
     name: '用户管理',
     component: index,
     redirect: '/User',
+    isAuth: true,
     children: [
       {
         path: '/User',
         name: '用户注册信息',
         component: pageUser,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       },
     ]
   },
@@ -56,19 +60,20 @@ const routes = [
     path: '/navigation-3',
     name: '数据管理',
     component: index,
+    isAuth: false,
     redirect: '/Upload',
     children: [
       {
         path: '/Upload',
         name: '数据导入',
         component: pageUpload,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       },
       {
         path: '/Download',
         name: '数据导出',
         component: pageDownload,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       }
     ]
   },
@@ -77,30 +82,31 @@ const routes = [
     name: '业务查询',
     component: index,
     redirect: '/Sector',
+    isAuth: false,
     children: [
       {
         path: '/Sector',
         name: '小区配置信息查询',
         component: pageSector,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       },
       {
         path: '/eNodeB',
         name: '基站eNodeB信息查询',
         component: page_eNodeB,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       },
       {
         path: '/KPI',
         name: '小区KPI指标信息查询',
         component: pageKPI,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       },
       {
         path: '/PRB',
         name: 'PRB信息统计与查询',
         component: pagePRB,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       }
     ]
   },
@@ -109,18 +115,19 @@ const routes = [
     name: '业务分析',
     component: index,
     redirect: 'C2I',
+    isAuth: false,
     children: [
       {
         path: '/C2I',
-        name: '主邻小区C2I干扰分析',
+        name: '主邻小区干扰分析',
         component: pageC2I,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       },
       {
         path: '/C2Inew',
-        name: '重叠覆盖干扰小区三元组分析',
+        name: '重叠覆盖干扰分析',
         component: pageC2Inew,
-        meta: { isAuth: true }
+        meta: { isAuth: true, admin: false }
       }
     ]
   }
@@ -147,11 +154,13 @@ router.beforeEach((to, from, next) => {
       })
       router.replace(loginPage)
     }
-    else if (type === 'user') {
-
-    }
-    else if (type === 'admin') {
-
+    else if (type === 'user' && to.meta.admin === true) {
+      ElMessage({
+        type: 'error',
+        message: '没有该页的访问权限!',
+        showClose: true
+      })
+      router.replace(loginPage)
     }
   }
   next()

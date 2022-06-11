@@ -45,8 +45,8 @@ const file_name = ref(reactive({ name: '...' }))
 const upload = ref()
 
 const handleExceed = (files) => {
-  upload.value.clearFiles()
   upload.value.handleStart(files[0])
+  upload.value.clearFiles()
 }
 const submitUpload = () => {
   upload.value.submit()
@@ -55,19 +55,19 @@ const submitUpload = () => {
 // 可上传的文件
 const options = [
   {
-    value: 'tbCell',
+    value: 'tbcell',
     label: 'tbCell',
   },
   {
-    value: 'tbKPI',
+    value: 'tbkpi',
     label: 'tbKPI',
   },
   {
-    value: 'tbPRB',
+    value: 'tbprb',
     label: 'tbPRB',
   },
   {
-    value: 'tbMROData',
+    value: 'tbmrodata',
     label: 'tbMROData',
   }
 ]
