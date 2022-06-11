@@ -92,14 +92,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         url: '/login',
         data: ruleForm,
       }).then(resp => {
-        if (resp.data['code']) {// == 308
+        if (resp.data['code'] == 308) {
           ElMessage({
             showClose: true,
             message: '登陆成功!',
             type: 'success',
           })
           localStorage.setItem('type', ruleForm.type);
-          router.push("/navigation-1");
+          if (ruleForm.type == 'user') {
+            router.push("/navigation-3");
+          }
+          else {
+            router.push("/navigation-1");
+          }
+
         }
         else {
           ElMessage({

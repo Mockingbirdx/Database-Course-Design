@@ -25,7 +25,7 @@
         <el-scrollbar>
           <el-menu router>
             <el-submenu v-for="(item, index) in $router.options.routes.slice(1)" :key="index" :index="index">
-              <el-sub-menu :index="index">
+              <el-sub-menu v-if="type.type === 'admin' || type.type === 'user' && !item.isAuth" :index="index">
                 <template #title>
                   <el-icon>
                     <setting />
@@ -48,12 +48,15 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, reactive } from 'vue'
 import { Menu as IconMenu, Setting } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus"
 import axios from 'axios'
 
 const router = useRouter();
+
+let type = reactive({ type: localStorage.getItem('type') });
 
 function handleLogout() {
   axios({

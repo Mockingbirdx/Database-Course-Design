@@ -4,7 +4,7 @@
     <el-table-column label="下载格式">
       <template #default="scope">
         <el-button type="primary" plain size="small" style="width:43px"
-          @click="handleDownloadTxt(scope.$index); dialogVisible = true">txt</el-button>
+          @click="handleDownloadTxt(scope.$index); dialogVisible = true">csv</el-button>
         <el-button type="success" plain size="small" style="width:45px"
           @click="handleDownloadExcel(scope.$index); dialogVisible = true">excel</el-button>
       </template>
@@ -38,7 +38,10 @@ const getTables = () => {
   axios({ method: 'GET', url: '/tables', })
     .then(resp => {
       if (resp.data) {
-        tableData.value = resp.data['data']
+        tableData.value = []
+        for (var index in resp.data['data']) {
+          tableData.value.push({ name: resp.data['data'][index] })
+        }
       }
       else {
         ElMessage({
@@ -63,30 +66,36 @@ const handleDownloadExcel = (index: number) => {
 
 const handleDownloadTxt = (index: number) => {
   currentIndex.value = index
-  currentType.value = "txt"
+  currentType.value = "csv"
 }
 
 const submitDownload = () => {
   dialogVisible.value = false
 
   var url = '/tables/';
-  if (currentType.value == "txt") {
-    url += 'txt/'
+  if (currentType.value == "csv") {
+    url += 'csv/?table='
   }
   else {
-    url += 'excel/'
+    url += 'excel/?table='
   }
   url += tableData.value[currentIndex.value].name
 
-  axios({ method: 'GET', url: url })
-    .then(resp => {
-      if (resp.data.code != 308) {
-        ElMessage({
-          message: "下载失败: " + resp.data.msg,
-          type: 'warning',
-        })
-      }
-    });
+  //简历下载
+
+  let a = document.createElement('a')
+  a.href = url
+  a.click()
+
+  // axios({ method: 'GET', url: url })
+  //   .then(resp => {
+  //     if (resp.data.code != 308) {
+  //       ElMessage({
+  //         message: "下载失败: " + resp.data.msg,
+  //         type: 'warning',
+  //       })
+  //     }
+  //   });
 }
 </script>
 
