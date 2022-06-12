@@ -17,6 +17,8 @@ npm install element-plus --save
 
 npm install typescript
 
+npm install echarts vue-echarts
+
 vscode 推荐插件:
 1. Vue
 2. Vue Language Features (Volar)

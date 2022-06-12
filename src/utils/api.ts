@@ -36,7 +36,7 @@ axios.interceptors.response.use(success => {
 
 let base = '';
 
-export const postRequest = (url, params) => {
+export const postRequest = (url: string, params: object) => {
     return axios({
         method: 'POST',
         url: `${base}${url}`,
@@ -44,7 +44,7 @@ export const postRequest = (url, params) => {
     })
 }
 
-export const getRequest = (url, params) => {
+export const getRequest = (url: string, params: object) => {
     return axios({
         method: 'GET',
         url: `${base}${url}`,

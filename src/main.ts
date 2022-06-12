@@ -8,6 +8,7 @@ import * as echarts from 'echarts'
 
 
 const app = createApp(App)
-app.use(ElementPlus).use(router)
+app.use(ElementPlus)
+app.use(router as any)
 app.config.globalProperties.$echarts = echarts
 app.mount('#app')
