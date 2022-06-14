@@ -24,7 +24,7 @@
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <el-scrollbar>
           <el-menu router>
-            <el-submenu v-for="(item, index) in $router.options.routes.slice(1)" :key="index" :index="index">
+            <el-submenu v-for="(item, index) in $router.options.routes.slice(2)" :key="index" :index="index">
               <el-sub-menu v-if="type.type === 'admin' || type.type === 'user' && !item.isAuth" :index="index">
                 <template #title>
                   <el-icon>

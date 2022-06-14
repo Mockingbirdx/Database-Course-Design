@@ -22,8 +22,8 @@
           <span>上传文件</span>
         </div>
       </template>
-      <el-upload ref="upload" action="/upload" :limit="1" :on-exceed="handleExceed" :auto-upload="false"
-        :data="file_name">
+      <el-upload :on-success="handleSuccess" ref="upload" action="/upload" :limit="1" :on-exceed="handleExceed"
+        :auto-upload="false" :data="file_name">
         <template #trigger>
           <el-button type="primary" class="button" plain>选择本地文件</el-button>
         </template>
@@ -40,16 +40,35 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
+import { ElMessage } from 'element-plus'
 
 const file_name = ref(reactive({ name: '...' }))
 const upload = ref()
 
-const handleExceed = (files) => {
+const handleExceed = (files: any) => {
   upload.value.handleStart(files[0])
-  upload.value.clearFiles()
 }
+
 const submitUpload = () => {
   upload.value.submit()
+  upload.value.clearFiles()
+}
+
+const handleSuccess = (resp: any) => {
+  console.log(resp)
+  if (resp.code == 309) {
+    ElMessage({
+      showClose: true,
+      message: '上传失败: ' + resp.data['message'],
+      type: 'error',
+    })
+  }
+  else {
+    ElMessage({
+      message: `上传成功`,
+      type: 'success',
+    })
+  }
 }
 
 // 可上传的文件

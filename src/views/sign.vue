@@ -1,13 +1,6 @@
 <template>
   <div>
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      :rules="rules"
-      label-width="120px"
-      class="login-box"
-      :size="formSize"
-    >
+    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="120px" class="login-box" :size="formSize">
       <h3>用户注册</h3>
       <el-row>
         <el-form-item label="账号" class="login-item" prop="name">
@@ -26,7 +19,7 @@
       </el-row>
       <el-row>
         <el-form-item>
-          <el-button type="primary" @click="submitForm(ruleFormRef)">注册</el-button>
+          <el-button type="primary" @click="handleCreate(ruleFormRef)" plain>注册</el-button>
           <el-button @click="gotoLogin">返回</el-button>
         </el-form-item>
       </el-row>
@@ -85,34 +78,38 @@ const rules = reactive({
   ],
 });
 
-
-const submitForm = async (formEl: FormInstance | undefined) => {
+const handleCreate = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      let signForm = {}
-      signForm['username'] = ruleForm['username']
-      signForm['password'] = ruleForm['password']
-
-      axios({
-        method: 'POST',
-        url: '/sign',
-        data: signForm,
-      }).then(resp => {
-        alert(JSON.stringify(resp))
-      })
-
-      ElMessage({
-        showClose: true,
-        message: '注册成功!',
-        type: 'success',
-      })
+      let post_data = {
+        username: ruleForm.username,
+        password: ruleForm.password,
+        type: 'user'
+      }
+      axios({ method: 'POST', url: '/sign', data: post_data })
+        .then(resp => {
+          if (resp.data.code == 308) {
+            ElMessage({
+              showClose: true,
+              message: '账号创建成功!',
+              type: 'success',
+            })
+            gotoLogin()
+          }
+          else {
+            ElMessage({
+              message: `账号创建失败`,
+              type: 'warning',
+            })
+          }
+        });
     } else {
       ElMessage({
-        showClose: true,
-        message: '注册失败',
+        message: `请填写正确的信息`,
         type: 'warning',
       })
+      return false
     }
   })
 }
@@ -131,12 +128,15 @@ const gotoLogin = () => {
   border-radius: 10px;
   box-shadow: 0 0 30px #dcdfe6;
 }
+
 .login-item {
   float: left;
 }
+
 .el-row {
   margin-bottom: 8px;
 }
+
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;

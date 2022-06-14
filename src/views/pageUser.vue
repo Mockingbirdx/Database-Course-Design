@@ -37,13 +37,21 @@
     <el-table-column prop="username" label="用户名" width="120" />
     <el-table-column prop="type" label="类型" width="120" />
     <el-table-column prop="password" label="密码" width="120" />
+    <el-table-column prop="auth" label="是否已验证" width="120" />
 
+    <el-table-column label="验证账号" width="120">
+      <template #default="scope">
+        <el-button type="default" size="small" @click="handleVerify(scope.$index);"
+          :disabled="tableData[scope.$index].auth === 'true'">验证</el-button>
+      </template>
+    </el-table-column>
 
-    <el-table-column label="操作">
+    <el-table-column label="删除账号">
       <template #default="scope">
         <el-button type="danger" size="small" @click="handleDelete(scope.$index); dialogVisible = true">删除</el-button>
       </template>
     </el-table-column>
+
   </el-table>
 
   <el-dialog v-model="dialogVisible" title="确定删除此账号吗？" width="30%">
@@ -79,6 +87,7 @@ let tableData = ref(reactive([
     username: '...',
     password: '...',
     type: '...',
+    auth: 'false',
   }
 ]))
 
@@ -121,12 +130,15 @@ const handleCreate = async (formEl: FormInstance | undefined) => {
       axios({ method: 'POST', url: '/users', data: post_data })
         .then(resp => {
           if (resp.data.code == 308) {
-            updateData();
             ElMessage({
               showClose: true,
               message: '账号创建成功!',
               type: 'success',
             })
+            axios({ method: 'POST', url: '/users/verify?id=' + (tableData.value[tableData.value.length - 1].id + 1) })
+              .then(resp => {
+                updateData();
+              });
           }
           else {
             ElMessage({
@@ -150,6 +162,26 @@ const currentIndex = ref(0)
 
 const handleDelete = (index: number) => {
   currentIndex.value = index
+}
+
+const handleVerify = (index: number) => {
+  axios({ method: 'POST', url: '/users/verify?id=' + tableData.value[index].id })
+    .then(resp => {
+      if (resp.data.code == 308) {
+        updateData();
+        ElMessage({
+          showClose: true,
+          message: '验证成功',
+          type: 'success',
+        })
+      }
+      else {
+        ElMessage({
+          message: '验证失败: ' + resp.data['message'],
+          type: 'warning',
+        })
+      }
+    });
 }
 
 const submitDelete = () => {

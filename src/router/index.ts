@@ -26,6 +26,13 @@ const routes = [
     meta: { isAuth: false }
   },
   {
+    path: '/sign',
+    name: '注册页',
+    component: sign,
+    isAuth: false,
+    meta: { isAuth: false }
+  },
+  {
     path: '/navigation-1',
     name: '系统管理',
     redirect: '/Database',

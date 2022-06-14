@@ -81,8 +81,6 @@ const submitDownload = () => {
   }
   url += tableData.value[currentIndex.value].name
 
-  //简历下载
-
   let a = document.createElement('a')
   a.href = url
   a.click()

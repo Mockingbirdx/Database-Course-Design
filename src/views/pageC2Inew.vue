@@ -1,7 +1,7 @@
 <template>
     <el-descriptions direction="vertical" :column="1" border>
         <el-descriptions-item label="说明">
-            设置阈值参数 x (0 ≤ x ≤ 100)，获取表 C2Inew，其中<br>
+            设置阈值参数 x (0 ≤ x ≤ 100)，生成表 tbC2I3，其中<br>
             PrbABS6(a, b) 或 PrbABS6(b, a) ≥ x%;<br>
             PrbABS6(a, c) 或 PrbABS6(c, a) ≥ x%;<br>
             PrbABS6(b, c) 或 PrbABS6(c, b) ≥ x%;<br>
@@ -66,13 +66,13 @@ let pageConfig = ref(reactive({
 }))
 //每页条数改变时触发 选择一页显示多少行
 
-const handleSizeChange = (val) => {
+const handleSizeChange = (val: any) => {
     console.log(`每页 ${val} 条`);
     pageConfig.value.currentPage = 1;
     pageConfig.value.pageSize = val;
 }
 //当前页改变时触发 跳转其他页
-const handleCurrentChange = (val) => {
+const handleCurrentChange = (val: any) => {
     console.log(`当前页: ${val}`);
     pageConfig.value.currentPage = val;
 }
