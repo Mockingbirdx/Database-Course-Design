@@ -8,7 +8,7 @@
             <el-input v-model="formInline.sectorid" placeholder="例：124672-2" />
             </el-form-item>
             <el-form-item label="sector-name">
-            <el-select v-model="formInline.sectorname" filterable placeholder="选择或输入小区名称" >
+            <el-select v-model="formInline.sectorname" filterable placeholder="选择或输入小区名称" clearable >
                 <el-option
                     v-for="item in options"
                     :key="item.value"

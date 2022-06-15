@@ -4,8 +4,8 @@
       <el-header style="text-align: right; font-size: 12px; height: 120px">        
         <el-form :inline="true" :model="formInline" class="demo-form-inline"  ref="ruleFormRef" style="position: relative;top: 20px;" >
             <el-row>
-            <el-form-item label="enode-id">
-            <el-select v-model="formInline.eid" filterable placeholder="选择或输入基站标识" >
+            <el-form-item label="enode-id" >
+            <el-select v-model="formInline.eid" filterable placeholder="选择或输入基站标识" clearable >
                 <el-option
                 v-for="item in IDoptions"
                 :key="item.value"
@@ -16,7 +16,7 @@
             </el-form-item>
 
             <el-form-item label="enode-name">
-            <el-select v-model="formInline.ename" filterable placeholder="选择或输入基站名称" >
+            <el-select v-model="formInline.ename" filterable placeholder="选择或输入基站名称" clearable >
                 <el-option
                 v-for="item in Nameoptions"
                 :key="item.value"

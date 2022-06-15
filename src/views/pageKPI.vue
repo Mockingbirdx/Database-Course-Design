@@ -5,7 +5,7 @@
         <el-form :inline="true" :model="formInline" class="demo-form-inline"  ref="ruleFormRef" style="position: relative;top: 20px;" >
             <el-row>
             <el-form-item label="sector-name">
-            <el-select v-model="formInline.sectorname" filterable placeholder="选择或输入基站标识" >
+            <el-select v-model="formInline.sectorname" filterable placeholder="选择或输入基站标识" clearable >
                 <el-option
                 v-for="item in Nameoptions"
                 :key="item.value"
@@ -15,7 +15,7 @@
             </el-select>            
             </el-form-item>
             <el-form-item label="属性">
-            <el-select v-model="formInline.attribute" filterable placeholder="选择或输入想查看的属性" >
+            <el-select v-model="formInline.attribute" filterable placeholder="选择或输入想查看的属性" clearable >
                 <el-option label="rrcComplete" value="rrcComplete" />
                 <el-option label="rrcRequest" value="rrcRequest" />
                 <el-option label="rrcSuccessPer" value="rrcSuccessPer" />
