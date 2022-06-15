@@ -89,7 +89,6 @@
       </el-header>
       <el-main>          
         <el-scrollbar>
-            <!--可以用于测试
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column prop="startTime" label="startTime" width="120" />
                 <el-table-column prop="rrcComplete" label="rrcComplete" width="120" />
@@ -129,7 +128,7 @@
                 <el-table-column prop="throughRebuildBackEnodebInDiffFreqSwitchOutSuccess" label="throughRebuildBackEnodebInDiffFreqSwitchOutSuccess" width="120" />
                 <el-table-column prop="enbInSwitchOutSuccess" label="enbInSwitchOutSuccess" width="120" />
                 <el-table-column prop="enbInSwitchOutTry" label="enbInSwitchOutTry" width="120" />
-            </el-table>-->
+            </el-table>
             <div class="echart-container">     
             <div id="myChart123" :style="{width: '1000px', height: '550px'}"></div>
             </div>
@@ -158,15 +157,10 @@ const value = ref('')
 const Nameoptions =  ref(reactive([]))
 
 const loadOptionData = () => {  
-    axios({ method: 'GET', url: '/tbcellkpi' })
+    axios({ method: 'GET', url: '/tbcellkpi/sectorname' })
     .then(resp => {
             if (resp.data) {
-                for(var i=0;i<resp.data['data'].length;i++){
-                    var a = {value: '', label:''}
-                    a.value=resp.data['data'][i]['sectorName']
-                    a.label=resp.data['data'][i]['sectorName']
-                    Nameoptions.value.push(a)
-                }
+                    Nameoptions.value=resp.data['data']
             }
             else {
                 ElMessage({
@@ -265,6 +259,7 @@ let extractByKey = function(arr,key,resultType='String',separator=',') {
     else if(resultType==='String')return resultArr.join(separator)
     else throw new Error("resultType无效");
 }
+let myChart = ref()
 // 获取干扰分析数据，并更新表格
 const handleSubmit = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
@@ -324,8 +319,9 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
                     sites.push(tableData.value[i].startTime);
                     attridata.push(tableData.value[i][formInline.attribute])
                 }
-                let myChart = echarts.init(document.getElementById("myChart123"));
                 // 绘制图表
+                myChart=echarts.init(document.getElementById("myChart123"));
+
                 myChart.setOption({
                     xAxis: {
                         name:'date',
@@ -341,7 +337,17 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
                         data: attridata,
                         itemStyle : { normal: {label : {show: true}}}                 
                     }
-                    ]
+                    ],
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            saveAsImage: {
+                                show:true,
+                                excludeComponents :['toolbox'],
+                                pixelRatio: 2
+                            }
+                        }
+                    }
                 });
         });    
 }
