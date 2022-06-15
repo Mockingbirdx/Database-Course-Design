@@ -1,5 +1,5 @@
 <template>
-  <el-container class="layout-container-demo" style="height: 650px; border: 1px solid #eee">
+  <el-container class="layout-container-demo" style="height: 800px; border: 1px solid #eee">
     <el-header style="text-align: left; font-size: 12px; padding-top:10px">
       <h2>{{ $route.name }}</h2>
 
