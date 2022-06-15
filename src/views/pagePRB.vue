@@ -48,6 +48,7 @@
 
             <el-form-item>
             <el-button type="primary" @click="handleSubmit(ruleFormRef)" plain>Query</el-button>
+            <el-button @click="submitDownload">download chart prb hourly</el-button>
             </el-form-item>
             </el-row>
         </el-form>
@@ -63,7 +64,6 @@
             </el-table>-->   
             <div class="echart-container">     
             <div id="myChart123" :style="{width: '1000px', height: '550px'}"></div>
-            <el-button type="primary" @click="handleSubmit(ruleFormRef)" plain>Query</el-button>
             </div>
         </el-scrollbar>
         <v-chart class="chart" :option="option" />
@@ -90,15 +90,10 @@ const value = ref('')
 const Nameoptions =  ref(reactive([]))
 const AttriOptions =  ref(reactive([]))
 const loadOptionData = () => {  
-    axios({ method: 'GET', url: '/tbprbnew' })
+    axios({ method: 'GET', url: '/tbprbnew/sectorname' })
     .then(resp => {
             if (resp.data) {
-                for(var i=0;i<resp.data['data'].length;i++){
-                    var a = {value: '', label:''}
-                    a.value=resp.data['data'][i]['sectorName']
-                    a.label=resp.data['data'][i]['sectorName']
-                    Nameoptions.value.push(a)
-                }
+                Nameoptions.value=resp.data['data']
             }
             else {
                 ElMessage({
@@ -269,10 +264,11 @@ let extractByKey = function(arr,key,resultType='String',separator=',') {
     else throw new Error("resultType无效");
 }
 // 获取干扰分析数据，并更新表格
+let urlstr = ""
 const handleSubmit = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     
-    let urlstr = '/tbprbnew';
+    urlstr = '/tbprbnew';
     
     if(formInline.attribute || formInline.sectorname || formInline.begintime || formInline.endtime){
         urlstr = urlstr + '?'
@@ -344,9 +340,28 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
                         data: attridata,
                         itemStyle : { normal: {label : {show: true}}}                 
                     }
-                    ]
+                    ],
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            saveAsImage: {
+                                show:true,
+                                excludeComponents :['toolbox'],
+                                pixelRatio: 2
+                            }
+                        }
+                    }
                 });
-        });    
+        });
+}
+
+const submitDownload = () => {
+
+  var url = '/tbprb/export-hourly';
+  console.log("Start download prbnew")
+  let a = document.createElement('a')
+  a.href = url
+  a.click()
 }
 </script>
 
